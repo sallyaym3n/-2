@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة وتحليل نتائج الطلاب</title>
+</head>
+<body>
+    <h1>نظام إدارة وتحليل نتائج الطلاب</h1>
+    <p>افتح وحدة تحكم المتصفح (Console) لمشاهدة نتائج الطلاب.</p>
+
+    <script>
+        class Student {
+            constructor(id, name, grades, attendance) {
+                this.id = id;
+                this.name = name;
+                this.grades = grades;
+                this.attendance = attendance;
+            }
+            calculateAverage() {
+                const total = this.grades.reduce((sum, grade) => {
+                    return sum + grade;
+                }, 0);
+
+                return total / this.grades.length;
+            }
+            getGrade(average) {
+                if (average >= 90) {
+                    return "A";
+                } else if (average >= 80) {
+                    return "B";
+                } else if (average >= 70) {
+                    return "C";
+                } else if (average >= 60) {
+                    return "D";
+                } else if (average >= 50) {
+                    return "E";
+                } else {
+                    return "F";
+                }
+            }
+            getResult(average) {
+                if (average >= 50 && this.attendance >= 75) {
+                    return "ناجح";
+                } else {
+                    return "يحتاج مراجعة";
+                }
+            }
+        }
+        const student1 = new Student(1, "Aya", [88, 92, 84], 90);
+        const student2 = new Student(2, "Sally", [45, 48, 42], 80);
+        const student3 = new Student(3, "Alaa", [76, 81, 79], 85);
+        const student4 = new Student(4, "menna", [55, 62, 58], 70);
+        const studentsList = [student1, student2, student3, student4];
+        const strugglingStudents = studentsList.filter((student) => {
+            const average = student.calculateAverage();
+            return average >= 40 && average <= 49;
+        });
+        const studentsAfterBonus = strugglingStudents.map((student) => {
+            const average = student.calculateAverage();
+
+            return {
+                id: student.id,
+                name: student.name,
+                average: average,
+                newAverage: average + 5
+            };
+        });
+        const totalNewAverage = studentsAfterBonus.reduce((sum, student) => {
+            return sum + student.newAverage;
+        }, 0);
+
+        let bonusAverage = 0;
+
+        if (studentsAfterBonus.length > 0) {
+            bonusAverage = totalNewAverage / studentsAfterBonus.length;
+        }
+        console.log("===== تقرير نتائج الطلاب =====");
+
+        studentsList.forEach((student) => {
+            const average = student.calculateAverage();
+            const grade = student.getGrade(average);
+            const result = student.getResult(average);
+
+            console.log("------------------------------");
+            console.log("رقم الجلوس:", student.id);
+            console.log("اسم الطالبة:", student.name);
+            console.log("المتوسط:", average.toFixed(2));
+            console.log("التقدير:", grade);
+            console.log("النتيجة النهائية:", result);
+        });
+        console.log("===== الطالبات اللاتي شملتهن لجنة الرأفة =====");
+        console.log(studentsAfterBonus);
+        console.log("متوسط الطالبات بعد الرأفة:", bonusAverage.toFixed(2));
+    </script>
+</body>
+</html>
